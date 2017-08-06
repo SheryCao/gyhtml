@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<title>阅读训练</title>
+		<link rel="stylesheet" href="../css/style.css" />
+		<link rel="stylesheet" href="../css/read_test.css" />
+	</head>
+
+	<body>
+		<header id="header">
+			<div class="con">
+				<div class="versions" id="versions">{{version_name}} - {{textbook_name}} - {{chapter_name}}</div>
+				<div class="title">阅读训练测试</div>
+				<a href="home.html"><div class="back"></div></a>
+			</div>
+		</header>
+		<div class="section">
+			<div class="sectionBox" id="sectionBoxId">
+				<ul>
+					<li class="topic" v-for="(item , index) in items">
+						<h4>{{index+1}}.{{item.question}}
+						</h4>
+						<label v-for="itemO in item.answers"  v-bind:id="itemO.correct" >
+							<input type="radio" v-bind:name="item.id"/>
+							{{itemO.answer}}
+						</label>
+					</li>
+				</ul>
+			</div>
+			<div class="start">
+				<a href="filtrate_newWorld.html" class="unfamiliarWords">
+					筛选生词
+				</a>
+				<a href="javascript:alert(sessionStorage.readCon);" class="showSection">
+					查看文章
+				</a>
+				<a href="javascript:;" class="submit" id="enterTheAnswer">
+					交卷
+				</a>
+				<a href="javascript:window.close();" class="exit">
+					退出
+				</a>
+			</div>
+		</div>
+		<div class="mode" id="mode" style="display: none;">
+			<ul class="box" id="box">
+				<li>第一题：<span>错误</span></li>
+				<li>第二题：<span>错误</span></li>
+				<li>第三题：<span>错误</span></li>
+				<li>第四题：<span>错误</span></li>
+				<li>第五题：<span>错误</span></li>
+			</ul>
+		</div>
+
+		<script src="../js/jquery-3.2.1.min.js"></script>
+		<script src="../js/vue.min.js"></script>
+		<script src="../js/common.js"></script>
+		<script src="../js/read_test.js"></script>
+	</body>
+
+</html>

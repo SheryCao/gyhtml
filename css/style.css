@@ -1,0 +1,147 @@
+*{
+	margin:0;
+	border:0;
+	padding:0;
+	font-style:normal;
+}
+html,
+body {
+	height: 100%;
+	width: 100%;
+	font-family: "微软雅黑";
+}
+
+ul,
+li {
+	list-style: none;
+}
+
+a {
+	text-decoration: none;
+}
+i{
+	font-style: normal;
+}
+img {
+	border: none;
+}
+img,a,button,em,del,strong,var,label,cite,small,time,mark,code,textarea{
+	display:inline-block;
+}
+
+button,input{
+	outline: medium;
+}
+
+.clearfix:after{
+	content: ' ';
+	display: block;
+	clear: both;
+	visibility:hidden;
+	line-height: 0;
+	height:0;
+}
+
+header,
+section,
+footer {
+	position: relative;
+}
+
+header {
+	width: 1200px;
+	height: 64px;
+	margin: 0 auto;
+}
+header .logo{
+	float: left;
+}
+header a{
+	float: right;
+	width: 150px;
+	height: 64px;
+	text-align: center;
+	color: #333;
+	line-height: 64px;
+	font-size: 18px;
+	transition: all 0.5s;
+}
+header a:hover{
+	color: #ff7b57;
+}
+
+footer{
+	margin-top: 80px;
+	width: 100%;
+	text-align: center;
+	height: 60px;
+	background-color: #333;
+	color: #fff;
+	font-size: 14px;
+	line-height: 60px;
+	position: relative;
+	bottom: 0;left: 50%;
+	transform: translateX(-50%);
+}
+.pad10{
+	padding: 10px;
+}
+.pad5{
+	padding: 5px;
+}
+.padL10{
+	padding-left: 10px;
+}
+.padL20{
+	padding-left: 20px;
+}
+.padL30{
+	padding-left: 30px;
+}
+
+.masking{
+	width: 100%;
+	height: 100%;
+	background-color: rgba(0,0,0,.4);
+	position: absolute;
+	left: 0;top: 0;
+	z-index: 5;
+}
+.masking .reminder{
+	width: 344px;height: 230px;
+	background-color: #fff;
+	font-size: 18px;
+	color: #333;
+	position: absolute;
+	left: 50%;top: 50%;
+	transform: translate(-50%,-50%);
+	z-index: 6;
+	text-align: center;
+}
+.masking .reminder h4{
+	font-weight: normal;
+	line-height: 125px;
+	width: 100%;
+	height: 125px;
+}
+.masking .reminder .btnsOk{
+	width: 186px;
+	height: 50px;
+	border-radius: 25px;
+	background-color: #ff7b57;
+	color: #fff;
+	line-height: 50px;
+	margin: 0 auto;
+	font-size: 16px;
+	cursor: pointer;
+	transition: all 0.2s;
+}
+.masking .reminder .btnsOk:hover{
+	width: 200px;
+	box-shadow: inset 0 25px 25px 0 rgba(255,255,255,.2);
+}
+.userSelect{
+    user-select: none;
+}
+
+

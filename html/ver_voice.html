@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <title>选择版本 - 经典语音</title>
+    <link rel="stylesheet" href="../css/style.css" />
+    <link rel="stylesheet" href="../css/ver_read.css" />
+    <link rel="stylesheet" href="../css/loading.css">
+    <style>
+        li .operate a {
+            font-size: 16px;
+            color: #333;
+        }
+
+        li .operate a:hover {
+            color: #ff7b57;
+        }
+
+        .courseA li.thisColor {
+            color: #ff7b57;
+        }
+
+        section {
+            margin: 0 auto;
+        }
+    </style>
+</head>
+
+<body>
+    <header id="header">
+        <div class="header clearfix">
+            <a class="logo" href="#">
+                <img src="../imgs/logo.png" />
+            </a>
+            <a class="exit" href="../index.html">
+					退出
+				</a>
+            <a class="goHome" href="home.html">
+					回到首页
+				</a>
+        </div>
+    </header>
+    <div class="topnav">
+        <div class="center">
+            您所在的位置： <span>智能阅读 > 经典语音</span>
+        </div>
+    </div>
+    <section>
+        <div class="main clearfix">
+            <div class="mainleft" id="mainleft">
+                <ul id="mainleftul">
+                    <li v-for="item in items" v-bind:id="item.id">
+                        <div class="tit">
+                            <span>+</span>
+                            <b>{{item.name}}</b>
+                        </div>
+                        <ul class="courseA" style="display: none;">
+                            <li v-for="list in item.type" v-bind:id="list.id" class="">
+                                {{list.name}}
+                            </li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+            <div class="mainright clearfix">
+                <div class="study">
+                    <div class="top">
+                        <div class="tit" id="studyTit">
+                            点击左侧列表选择学习类别
+                        </div>
+                    </div>
+                    <div class="bot">
+                        <ul class="clearfix" id="botUl">
+                            <li v-for="(item,index) in items" v-bind:class="item.allow==1?'complete':''" v-on:click="fnclickVoiceList(item.allow , item.v_name , item.id , item.type , $event)"
+                            v-on:mouseenter="fnmouseenterVoiceList(item.allow ,item.type , $event)"
+                            v-on:mouseleave="fnmouseleaveVoiceList(item.allow , item.type , $event)">
+                                <div class="pic">
+                                </div>
+                                <div v-if="(item.type == 1 || item.type == 3)?false:true" class="operate" style="display:none;">
+                                    <a v-if="item.type_id == 2?false:true" href="classicalVoice/voice_distinguish.html">辩音</a>
+                                    <a v-bind:href="href1">听写</a>
+                                    <a v-bind:href="href2">闯关</a>
+                                </div>
+                                <span>{{item.v_name}}</span><i style="color:#ff1919">{{(item.type == 1)?item.score:''}}</i>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="navs">
+                    <div class="category">
+                        07
+                        <span>Intelligent Memory</span>
+                    </div>
+                    <div class="title">
+                        经典语音
+                    </div>
+                    <a href="home.html"><i></i></a>
+                </div>
+            </div>
+        </div>
+    </section>
+    <footer id="footer" style="line-height:60px;">
+        ©2017SOUGOU - 京ICP证050897号 - 京公安网备11000002000025号
+    </footer>
+
+    <script src="../js/jquery-3.2.1.min.js"></script>
+    <script src="../js/vue.min.js"></script>
+    <script src="../js/common.js"></script>
+    <script src="../js/loading.js"></script>
+    <script src="../js/ver_voice.js"></script>
+</body>
+
+</html>

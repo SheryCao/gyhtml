@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title>字母拼写测试</title>
+		<link rel="stylesheet" href="../../css/style.css" />
+		<link rel="stylesheet" href="../../css/classicalVoice/singleWordRead.css" />
+		<style>
+			section .content .item .line {
+				     margin-left: 0; 
+			}
+		</style>
+	</head>
+	<body>
+		<header class="header">
+			<div class="top" id="top">
+				<p class="title">{{version_name}} - {{textbook_name}} - {{chapter_name}}</p>
+				<p class="countdown">剩余时间: {{minute}}分{{second}}秒</p>
+			</div>
+		</header>
+		<section>
+			<div class="content">
+				<ul class="clearfix" id="contentUl">
+					<li class="item" v-for="(item,index) in items" v-bind:id="index" v-bind:data-word="item.letter">
+						<span class="num">{{index+1}}.</span>
+						 <!-- <input type="text" class="line" v-on:click="fnclickItemPlayer(item.letter_url)" v-bind:data-src="item.letter_url" v-bind:data-letter="item.letter.charAt(0)" /> -->
+						<span class="word" v-for="(subitem,index) in item.testletter" v-bind:data-state="subitem.state">
+							{{(subitem.state == 0)?subitem.model:''}}
+							<input class="line"  v-if="(subitem.state == 1)?true:false" type="text" name="" value=""
+							v-on:click="fnclickItemPlayer(item.letter_url)" v-bind:data-src="item.letter_url" v-bind:data-letter="subitem.model" />
+						</span>
+					</li>	
+				</ul>
+			</div>
+			<div class="btn clearfix">
+				<div class="commit" id="commit">交卷</div>
+				<a href="../ver_voice.html"><div class="quit">退出</div></a>
+			</div>
+		</section>
+		<audio autoplay src="" type="audio/wav" id="audioplay">
+		</audio>
+		
+		
+		<script src="../../js/jquery-3.2.1.min.js"></script>
+		<script src="../../js/common.js"></script>
+		<script src="../../js/vue.min.js"></script>
+		<script src="../../js/classicalVoice/singleWordRead.js"></script>
+	</body>
+</html>

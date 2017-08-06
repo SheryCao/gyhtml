@@ -1,0 +1,304 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<title>单个字母拼读</title>
+		<link rel="stylesheet" href="../../css/style.css" />
+		<link rel="stylesheet" href="../../css/word_strengthen_memory.css" />
+		<link rel="stylesheet" href="../../css/word_write.css" />
+		<style>
+			.titleBox .title{
+				width:100%;
+				margin:0 auto;
+				font-size: 14px;
+				line-height: 54px;
+				height: 54px;
+				color: #333;
+				position:relative;
+			}
+			.titleBox .title .titleBold{
+				color:#333;
+				font-size:18px;
+				letter-spacing:2px;
+			}
+			.titleBox .title .titleWarn{
+				position:absolute;
+				top:0;left:512px;
+				font-size:16px;
+				color:#ff7b57;
+			}
+			
+			.word .wordCon {
+				width: 280px;
+				height: 160px;
+				margin: 32px auto;
+				line-height: 140px;
+				position: relative;
+			}
+			
+			.word .wordCon .tips {
+				width: 60%;
+				height: 30px;
+				color: #ff1919;
+				font-size: 18px;
+				letter-spacing: 2px;
+				position: absolute;
+				bottom: 36px;
+				left: 120px;
+				text-align: left;
+				box-sizing: border-box;
+				line-height: 30px;
+			}
+		
+			.word .wordCon .correctTip {
+				color: #57b3ff;
+			}
+			.word .wordCon .answer {
+				color: #ff1919;
+				font-size: 24px;
+				letter-spacing: 2px;
+				position: absolute;
+				left: 126px;
+				top: 7px;
+			}
+			.word .wordCon .answer.correctAnswer {
+				color: #57b3ff;
+			}
+			.word .wordCon .letterBox {
+				position: absolute;
+				width: 100%;
+				height: 40px;
+				left: -2px;
+				top: -2px;
+			}
+			.word .wordCon .letterBox .letterInput {
+				width: 40px;
+				border-bottom: 1px solid #333;
+				font-size: 22px;
+				color: #333;
+				margin-left: 53px;
+				text-align: center;
+			}
+			.word .wordCon .letterBox .letters {
+				font-size: 22px;
+				color: #333;
+			}
+			.word .wordCon .voice {
+				text-align: left;
+				width: 96px;
+				height: 46px;
+				line-height: 46px;
+				font-size: 12px;
+				color: #666;
+				cursor: pointer;
+				position: absolute;
+				left: 0;
+				top: 49px;
+			}
+			.word .wordCon .status {
+				width: 46px;
+				height: 46px;
+				background-image: url(../../imgs/hintNo.png);
+				background-repeat: no-repeat;
+				background-position: center;
+				position: absolute;
+				right: 6px;
+				top: 49px;
+			}
+			.word .wordCon .status.correctImg {
+				background-image: url(../../imgs/hintYes.png);
+			}
+		</style>
+	</head>
+
+	<body>
+		<section id="sectionBox">
+			<div class="main">
+				<div class="titleBox" id="titleBox">
+					<div class="versions" id="versions">{{version_name}} - {{textbook_name}} - {{chapter_name}}</div>
+					<div class="title">
+						<span class="titleBold">智能拼写</span>
+						<span class="titleWarn">( 听写：根据读音写出单词  )</span>
+					</div>
+					<a href="../ver_voice.html" class="exit" id="exit"></a>
+				</div>
+				<div class="word" id="word">
+					<div class="wordCon">
+						<div class="answer correctAnswer" id="answer" style="display: none;">
+							hack
+						</div>
+						<div class="letterBox">
+							<input type="text" class="letterInput" id="letterInput"/>
+							<span class="letters" id="letters">ack</span>
+						</div>
+						<div class="voice" id="voice">听语音<i></i></div>
+						<div class="status correctImg" id="status" style="display: none;"></div>
+						<div class="tips correctTip" id="tips" style="display:none">回答正确</div>
+					</div>
+				</div>
+				<div class="btns">
+					<button class="enter" id="enter">
+						<i></i>&nbsp;
+						(Enter)
+					</button>
+				</div>
+				<div class="otherInformation">
+					<div class="studyTime" id="studyTime">学习时长：00 : 00 : 00 </div>
+					<div class="thisStudy" id="thisStudy">
+						总单词数：&nbsp; <span id="wordsNum"></span> &nbsp; &nbsp; &nbsp; &nbsp; 已学单词：<span id="hasLearnWords"></span>
+					</div>
+				</div>
+			</div>
+		</section>
+		<div class="masking" id="masking" style="display: none;">
+			<div class="reminder">
+				<h4>学习完成，现在开始进行模拟测试！</h4>
+				<button class="btnsOk">确定</button>
+			</div>
+		</div>
+		<audio autoplay src="" type="audio/wav" id="audioplay">
+		</audio>
+
+		<script src="../../js/jquery-3.2.1.min.js"></script>
+		<script src="../../js/vue.min.js"></script>
+		<script src="../../js/common.js"></script>
+		<script>
+			//获取用户ID
+			var userMessage = sessionStorage.userMessage;
+			if(userMessage) {
+				userMessage = JSON.parse(userMessage);
+				var username = userMessage[0].ID;
+			} else {
+				window.location = '../../index.html';
+			}
+			//当前选择的版本ID，教材ID ,选择的章节
+			var textbook_id, chapter_id, version_id;
+			var type, typeStr, textbook_name, version_name, chapter_name;
+			
+			textbook_id = sessionStorage.textbook_id;
+			version_id = sessionStorage.version_id;
+			chapter_id = sessionStorage.chapter_id;
+			typeStr = sessionStorage.typeStr;
+			textbook_name = sessionStorage.textbook_name;
+			version_name = sessionStorage.version_name;
+			chapter_name = sessionStorage.chapter_name;
+			type = sessionStorage.type;
+
+			var titleBox = new Vue({
+				el:'#versions',
+				data:{
+					version_name:version_name,
+					textbook_name:textbook_name,
+					chapter_name:chapter_name
+				}
+			});	
+			
+			
+			var currentVoice = {};
+			var VoiceArr = [];
+			var currentIndex = 0;
+			getAllVoices();
+			function getAllVoices(){
+			 	$.ajax({
+			 		type:'get',
+			 		url:thisUrl + '/Areas/api/Interface.ashx',
+			 		dataType:'json',
+			 		data:{
+			 			method:'voicetest',
+						type_id:textbook_id,
+						voice_id:chapter_id,
+						type:2,
+						issound:0
+			 		},
+			 		success: function( data ){
+			 			VoiceArr = data;
+			 			if(VoiceArr.length > 0){
+			 				currentVoice = VoiceArr[currentIndex];
+			 				$('#letters').text(currentVoice.letter.substring(1));
+			 				$('#letterInput').focus();
+			 				$('#wordsNum').text(VoiceArr.length);
+			 				$('#hasLearnWords').text(currentIndex+1);
+			 				$('#audioplay').attr('src',thisUrl + currentVoice.letter_url);
+			 			}else{
+			 				alert('获取数据失败，请联系相关客服人员');
+			 			}
+			 		}
+			 		
+			 	});
+			}
+			
+			
+			$('#voice').on('click',function(){
+				$('#audioplay').attr('src',thisUrl + currentVoice.letter_url);
+			});
+			
+			
+			$('#enter').on('click',function(){
+				valideWords();
+			});
+			
+		// 	document.onkeydown=function(event){
+	    //         var e = event || window.event || arguments.callee.caller.arguments[0];
+	    //          if(e && e.keyCode==13){ 
+	    //             valideWords();
+	    //         }
+	    //    };
+	       
+	       	var checkout_flag = false;
+	       	var enterNum = 0;
+	       	function valideWords(){
+	       		enterNum ++;
+	       		var word_input = $.trim( $('#letterInput').val() );
+	       		var first_letter = currentVoice.letter.charAt(0);
+	       		if( enterNum%2 != 0 ){
+	       			$('#letterInput').attr('disabled' , true).css('background','#fff');
+	       		}
+	       		else{
+	       			$('#letterInput').attr('disabled', false).val('').focus();	
+	       		}
+	       		
+	       		if(word_input === first_letter){
+	       			if(checkout_flag){
+	       				toNextLetter();
+	       			}else{
+	       				$('#answer').attr('class','answer correctAnswer').text(currentVoice.letter).show();
+	       				$('#status').attr('class','status correctImg').show();
+	       				$('#tips').attr('class','tips correctTip').text('回答正确').show();
+	       				checkout_flag = true;
+	       			}
+	       		}
+	       		else{
+	       			$('#answer').attr('class','answer').text(currentVoice.letter).show();
+       				$('#status').attr('class','status').show();
+       				$('#tips').attr('class','tips').text('回答错误').show();
+       				
+       				checkout_flag = false;
+	       		}
+	       	}
+	       	
+	       	function toNextLetter(){
+	       		if(currentIndex == VoiceArr.length-1){
+	    			$('#masking').show().find('.btnsOk').on('click',function (e){	    				
+    					window.location = './singleWordRead.html';
+    					$("#letterInput").val('').focus();	    				
+	    			});
+					return;
+	    		}
+	    		checkout_flag = false;
+	    		currentIndex ++;
+	    		currentVoice = VoiceArr[currentIndex];
+	    		$('#letterInput').focus();
+	    		$('#letters').text(currentVoice.letter.substring(1));
+	    		$('#hasLearnWords').text(currentIndex+1);
+	    		$("#answer").hide();
+	    		$('#tips').hide();
+	    		$("#letterInput").val('').focus();
+	    		$("#status").hide();
+				$("#audioplay").attr("src",thisUrl+VoiceArr[currentIndex].letter_url);	       		
+	       }
+			
+		</script>
+	</body>
+
+</html>

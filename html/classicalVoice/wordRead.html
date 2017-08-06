@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<title>智能听写</title>
+		<link rel="stylesheet" href="../../css/style.css" />
+		<link rel="stylesheet" href="../../css/word_strengthen_memory.css" />
+		<link rel="stylesheet" href="../../css/word_write.css" />
+		<style>
+			.titleBox .title{
+				width:100%;
+				margin:0 auto;
+				font-size: 14px;
+				line-height: 54px;
+				height: 54px;
+				color: #333;
+				position:relative;
+			}
+			.titleBox .title .titleBold{
+				color:#333;
+				font-size:18px;
+				letter-spacing:2px;
+			}
+			.titleBox .title .titleWarn{
+				position:absolute;
+				top:0;left:512px;
+				font-size:16px;
+				color:#ff7b57;
+			}
+			.wordCon{
+				width:520px;
+				height:100px;
+				margin:80px auto;
+				position:relative;
+			}
+			.wordCon .status{
+			    width: 46px;
+			    height: 46px;
+			    background-image: url(../../imgs/hintNo.png);
+			    background-repeat: no-repeat;
+			    background-position: center;
+			    position: absolute;
+			    right: -46px;
+			    top: 0;
+			}
+			.wordCon .status.correctImg{
+				background-image: url(../../imgs/hintYes.png);
+			}
+			.wordCon .answer{
+				margin-top:8px;
+				text-align:left;
+				margin-left:-22px;
+				letter-spacing:2px;
+				color:#ff1919;
+				font-size:30px;
+			}
+			.wordCon .answer.correctAnswer{
+				color:#56b4fe;
+			}
+		</style>
+	</head>
+
+	<body>
+		<section id="sectionBox">
+			<div class="main">
+				<div class="titleBox" id="titleBox">
+					<div class="versions" id="versions">{{version_name}} - {{textbook_name}} - {{chapter_name}}</div>
+					<div class="title">
+						<div class="titleBold">智能拼写</div>
+						<div class="titleWarn">( 听写：根据读音写出单词  )</div>
+					</div>
+					<a href="../ver_voice.html" class="exit" id="exit"></a>
+				</div>
+				<div class="word" id="word">
+					<div class="wordCon">
+						<div class="inputBox">
+							<input id="wordinput" type="text" />
+							<div class="voice" id="voice">听语音<i></i></div>
+							<div class="status correctImg" id="status" style="display: none;"></div>
+						</div>
+						<div class="answer correctAnswer" id="answer" style="display: none;">
+							
+						</div>
+					</div>
+					
+					<div class="schedule" id="schedule">
+						<div class="atPresent"></div>
+					</div>
+				</div>
+				<div class="btns">
+					<button class="enter" id="enter">
+						<i></i>&nbsp;
+						(Enter)
+					</button>
+				</div>
+				<div class="otherInformation">
+					<div class="studyTime" id="studyTime">学习时长：00 : 00 : 00</div>
+					<div class="thisStudy" id="thisStudy">
+						总单词数：<span id="wordsNum"></span> &nbsp;&nbsp;&nbsp;&nbsp; &nbsp; 已学单词：<span id="hasLearnWords"></span> 
+					</div>
+				</div>
+			</div>
+		</section>
+		<div class="masking" id="masking" style="display: none;">
+			<div class="reminder">
+				<h4>学习完成，现在开始进行模拟测试！</h4>
+				<button class="btnsOk">确定</button>
+			</div>
+		</div>
+		<audio autoplay src="" type="audio/wav" id="audioplay">
+		</audio>
+
+		<script src="../../js/jquery-3.2.1.min.js"></script>
+		<script src="../../js/vue.min.js"></script>
+		<script src="../../js/common.js"></script>
+		<script>
+			//获取用户ID
+			var userMessage = sessionStorage.userMessage;
+			if(userMessage) {
+				userMessage = JSON.parse(userMessage);
+				var username = userMessage[0].ID;
+			} else {
+				window.location = '../../index.html';
+			}
+			//当前选择的版本ID，教材ID ,选择的章节
+			var textbook_id, chapter_id, version_id;
+			var type, typeStr, textbook_name, version_name, chapter_name;
+			
+			textbook_id = sessionStorage.textbook_id;
+			version_id = sessionStorage.version_id;
+			chapter_id = sessionStorage.chapter_id;
+			typeStr = sessionStorage.typeStr;
+			textbook_name = sessionStorage.textbook_name;
+			version_name = sessionStorage.version_name;
+			chapter_name = sessionStorage.chapter_name;
+			type = sessionStorage.type;
+			
+			var titleBox = new Vue({
+				el:'#versions',
+				data:{
+					version_name:version_name,
+					textbook_name:textbook_name,
+					chapter_name:chapter_name
+				}
+			});
+			var currentVoice = {};
+			var voiceArr =[];
+			var currentIndex = 0;
+			getAllWords();
+			function getAllWords(){
+				$.ajax({
+					type:'get',
+					url:thisUrl+'/Areas/api/Interface.ashx',
+					dataType:'json',
+					data:{
+						method:'voicetest',
+						type_id:textbook_id,
+						voice_id:chapter_id,
+						type:2,
+						issound:0
+					},
+					success:function(data){
+						voiceArr = data;
+						if(voiceArr.length > 0 ){
+							$('#wordsNum').text(voiceArr.length);
+							$('#hasLearnWords').text(currentIndex+1);
+							currentVoice = voiceArr[currentIndex];
+							$("#audioplay").attr("src",thisUrl + voiceArr[currentIndex].letter_url);
+							$('#wordinput').focus();
+						}else{
+							alert("请求数据失败！");
+						}
+					}
+				});
+			}
+			
+			
+			
+			// 设置播放按钮的语音播放路径
+			$("#voice").click(function(){
+				$("#audioplay").attr("src",thisUrl+currentVoice.letter_url);
+			});
+			
+			// 点击enter按钮
+			$("#enter").click(function(){
+				valideWords();
+			});
+			
+			// 按enter键
+			enter_key(valideWords);
+			
+			// 设置学习时长
+			timer('#studyTime');
+			
+			// 定义验证状态
+	        var checkout_flag = false;
+	        var enterNum = 0;
+	        // 校验输入框的值和当前播放的值
+	        function valideWords(){
+	        	enterNum ++;	        	
+	        	var word_input = $.trim( $("#wordinput").val() );
+	        	if(enterNum%2 != 0){
+	        		$("#wordinput").attr('disabled', true).css('background','#eee');
+	        	}else{
+	        		$("#wordinput").attr('disabled', false).val('').focus();
+	        	}
+	        	// 输入正确的情况
+	        	if( word_input == currentVoice.letter ){
+	        		if(checkout_flag)
+	        			toNextLetter();
+	        		else{
+	        			$("#answer").attr("class","answer correctAnswer").text("对比："+currentVoice.letter).show();
+	        			$("#status").attr("class","status correctImg").show();
+	        			checkout_flag = true;
+	        		}
+	        	}
+	        	// 输入错误的情况
+	        	else{
+	        		$("#answer").attr("class","answer").text("对比："+currentVoice.letter).show();
+	        		$("#status").attr("class","status").show();
+	        		$("#wordinput").focus();
+	        		checkout_flag = false;
+	        	}
+	       		
+	        }
+			
+			// 下一个
+	        function toNextLetter(){
+	       		if(currentIndex == voiceArr.length-1){
+	       			$('#masking').show().find('.btnsOk')
+	       			.on('click',function(){
+	       				window.location = './recognizeWord.html';
+						$("#wordinput").val("").focus();	
+	       			});					    					    		
+					return;
+	    		}
+	    		checkout_flag = false;
+	    		currentIndex ++;
+	    		currentVoice = voiceArr[currentIndex];
+	    		$('#hasLearnWords').text(currentIndex+1);
+	    		$("#answer").hide();
+	    		$("#wordinput").val("").focus();
+	    		$("#status").hide();
+				$("#audioplay").attr("src",thisUrl+voiceArr[currentIndex].letter_url);	       		
+	        }
+		</script>
+	</body>
+
+</html>

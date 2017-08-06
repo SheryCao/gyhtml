@@ -1,0 +1,128 @@
+section{
+	width: 1200px;
+	height: 720px;
+	background: url(../imgs/home/bacImg.png) no-repeat center;
+	margin: 25px auto;
+	position: relative;
+}
+.navs{
+	width: 672px;
+	height: 633px;
+	position: absolute;
+	left: 60px;top: 34px;
+	text-align: center;
+}
+.navs li{
+	width: 224px;
+	height: 164px;
+	float: left;
+	padding-top: 47px;
+	position: relative;
+	transition: all 0.3s ease-out;
+}
+.navs li:hover{
+	transform: scale(1.1);
+	background-color: #fff;
+	cursor: pointer;
+	box-shadow: 0 0 100px -30px #FF7B57;
+}
+@keyframes typefaceAnimation{
+	0%{top: 0;}
+	50%{top: -10px;}
+	100%{top: 0;}
+}
+.navs li:hover h3{
+	animation: typefaceAnimation 0.5s ease;
+	position: relative;
+	color: #ff7b57;
+}
+.navs li h3{
+	margin-top: 20px;
+	font-size: 18px;
+	color: #333;
+	line-height: 22px;
+	height: 22px;
+	font-weight: normal;
+}
+.navs li p{
+	font-size: 12px;
+	color: #999;
+	line-height: 18px;
+	height: 18px;
+}
+.message{
+	width: 308px;
+	height: 230px;
+	position: absolute;
+	right: 46px;
+	top: 34px;
+}
+.me{
+	padding-top: 40px;
+}
+.me .pic{
+	width: 60px;
+	height: 60px;
+	float: left;
+}
+.me .pic img{
+	width: 100%;
+	height: 100%;
+}
+.name{
+	float: left;
+	margin-left: 16px;
+}
+.name h3{
+	font-size: 18px;
+	color: #333;
+	line-height: 33px;
+	font-weight: normal;
+}
+.name h3 span{
+	font-size: 14px;
+	color: #ff1919;
+}
+.name .username{
+	display: block;
+	font-size: 14px;
+	color: #666;
+	line-height: 30px;
+}
+.experience{
+	width: 300px;
+	font-size: 14px;
+	color: #666;
+	padding-top: 20px;
+}
+.experience div{
+	float: left;
+	width: 150px;
+	margin-bottom: 16px;
+}
+.experience div:nth-child(1){
+	width: 300px;
+}
+.experience span{
+	color: #ff1919;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
